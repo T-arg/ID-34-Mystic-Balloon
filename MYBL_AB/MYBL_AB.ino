@@ -1,9 +1,9 @@
 /*
-  Mystic Balloon: http://www.team-arg.org/mybl-manual.html
+  Mystic Balloon: https://t-arg.github.io/ID-34-Mystic-Balloon/
 
-  Arduboy version 1.7.2:  http://www.team-arg.org/mybl-downloads.html
+  Arduboy version 1.7.2:  https://github.com/T-arg/ID-34-Mystic-Balloon
 
-  MADE by TEAM a.r.g. : http://www.team-arg.org/more-about.html
+  MADE by TEAM a.r.g. : https://t-arg.github.io/
 
   2016-2018 - GAVENO - CastPixel - JO3RI - Martian220
 

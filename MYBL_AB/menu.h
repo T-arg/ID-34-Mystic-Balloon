@@ -34,7 +34,7 @@ void stateMenuIntro()
   globalCounter++;
   if (globalCounter < 160)
   {
-    sprites.drawSelfMasked(34, 4, T_arg, 0);
+    sprites.drawSelfMasked(49, 20, T_arg, 0);
   }
   else
   {
@@ -57,7 +57,7 @@ void stateMenuMain()
     menuSelection++;
     sound.tone(300, 20);
   }
-  if (arduboy.justPressed(UP_BUTTON) && (menuSelection > 2))
+  if (arduboy.justPressed(UP_BUTTON) && (menuSelection > 3))
   {
     menuSelection--;
     sound.tone(300, 20);
@@ -67,7 +67,7 @@ void stateMenuMain()
     gameState = menuSelection;
     sound.tone(425, 20);
   }
-  sprites.drawPlusMask(46, 9 + 9 * (menuSelection - 2), selector_plus_mask, 0);
+  sprites.drawPlusMask(46, 9 + 9 * (menuSelection - 3), selector_plus_mask, 0);
 }
 
 void stateMenuHelp()
