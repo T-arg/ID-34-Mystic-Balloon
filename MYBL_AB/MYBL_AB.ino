@@ -51,6 +51,7 @@ void setup()
 
 void loop() {
   if (!(arduboy.nextFrame())) return;
+  musicUpdate();
   if (gameState < STATE_GAME_NEXT_LEVEL && arduboy.everyXFrames(10))sparkleFrames = (++sparkleFrames) % 5;
   arduboy.pollButtons();
   arduboy.clear();

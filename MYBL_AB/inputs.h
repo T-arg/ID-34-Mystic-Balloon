@@ -88,7 +88,7 @@ void checkInputs()
   {
     if (kid.speed.y == 0 && kid.isJumping == false && kid.isLanding == false)
     {
-      sound.tone(200, 100);
+      sfx(sfxJump);
       kid.isWalking = false;
       kid.isJumping = true;
       kid.jumpLetGo = false;

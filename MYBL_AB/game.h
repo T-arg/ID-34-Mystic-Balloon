@@ -10,12 +10,6 @@
 #include "levels.h"
 
 #define TOTAL_TONES 10
-PROGMEM const byte tones[] = {
-  //200, 100, 250, 125, 300, 150, 350, 400, 425, 475
-  131, 145, 139, 152, 131, 172, 200, 188, 213, 255
-};
-
-byte toneindex = 0;
 
 void stateMenuPlayNew()
 {
@@ -60,13 +54,13 @@ void stateGameNextLevel()
       {
         coinsCollected--;
         scorePlayer += 20;
-        sound.tone(pgm_read_byte(tones + toneindex++), 150);
+        sfxCount();
       }
       else if (balloonsLeft > 0)
       {
         balloonsLeft--;
         scorePlayer += 30;
-        sound.tone(pgm_read_byte(tones + toneindex++), 150);
+        sfxCount();
       }
       else
       {
@@ -75,7 +69,7 @@ void stateGameNextLevel()
         pressKeyIsVisible = !pressKeyIsVisible;
         if (toneindex < TOTAL_TONES)
         {
-          sound.tone(pgm_read_byte(tones + toneindex++), 200);
+          sfx(sfxSelect);
           toneindex = TOTAL_TONES;
         }
         if (level >= TOTAL_LEVELS)
@@ -129,7 +123,7 @@ void stateGameNextLevel()
     if (arduboy.justPressed(A_BUTTON | B_BUTTON))
     {
       toneindex = 0;
-      sound.tone(425, 20);
+      sfx(sfxSelect);
       setKid();
       //cam.pos = vec2(0, 0);
       cam.pos = vec2(0, LEVEL_HEIGHT - 64);

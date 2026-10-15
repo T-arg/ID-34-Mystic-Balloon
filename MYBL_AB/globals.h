@@ -13,7 +13,8 @@
 
 #include <Arduino.h>
 #include <Arduboy2.h>
-#include <ArduboyTones.h>
+#include "ATMconfig.h"
+#include <ATMlib.h>
 #include "vec2.h"
 #include "bitmaps.h"
 
@@ -73,7 +74,7 @@ struct HighRect
 
 Arduboy2Base arduboy;
 Sprites sprites;
-ArduboyTones sound(arduboy.audio.enabled);
+ATMsynth ATM;
 
 byte gameState = STATE_MENU_INTRO;   // start the game with the TEAM a.r.g. logo
 byte menuSelection = STATE_MENU_PLAY; // PLAY menu item is pre-selected
@@ -120,5 +121,6 @@ bool collide(HighRect rect1, HighRect rect2)
             rect2.y                 >=  rect1.y + rect1.height ||
             rect2.y + rect2.height  <=  rect1.y);
 }
+#include "music.h"
 
 #endif
