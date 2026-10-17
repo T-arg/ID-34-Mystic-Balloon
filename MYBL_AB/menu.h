@@ -47,20 +47,18 @@ void drawTitleScreen()
 
 void stateMenuIntro()
 {
-  globalCounter++;
-  if (globalCounter < 160)
-  {
-    sprites.drawSelfMasked(49, 20, T_arg, 0);
-  }
+  if (introFrame < INTRO_FRAMES) arduboyIntro(introFrame);                  // the ARDUBOY letters land on the notes
+  else if (introFrame < INTRO_FRAMES + 120) sprites.drawSelfMasked(49, 20, T_arg, 0);   // then the TEAM a.r.g. logo
   else
   {
     drawTitleScreen();
-    if ((globalCounter > 250) || arduboy.justPressed(A_BUTTON | B_BUTTON))
+    if ((introFrame > INTRO_FRAMES + 210) || arduboy.justPressed(A_BUTTON | B_BUTTON))
     {
       gameState = STATE_MENU_MAIN;
       sfx(sfxSelect);
     }
   }
+  introFrame++;
 }
 
 void stateMenuMain()
@@ -129,6 +127,9 @@ void stateMenuSoundfx()
     sfx(sfxMove);
   }
   if (arduboy.justPressed(UP_BUTTON)) arduboy.audio.off();
+  jukeTune += arduboy.justPressed(RIGHT_BUTTON) && jukeTune < TUNE_COUNT;           // jukebox: LEFT / RIGHT picks the tune
+  jukeTune -= arduboy.justPressed(LEFT_BUTTON) && jukeTune > 0;
+  if (arduboy.frameCount & 16) sprites.drawErase(64, 30, jukeArrows, 0);              // tiny arrows left and right of ON blink: the jukebox (LEFT / RIGHT)
   sprites.drawPlusMask(54, 18 + 9 * arduboy.audio.enabled(), selector_plus_mask, 0);
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
   {

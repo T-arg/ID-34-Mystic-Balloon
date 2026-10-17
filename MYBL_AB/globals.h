@@ -46,7 +46,7 @@
 #define FACING_LEFT                  1
 
 #define LEVEL_TO_START_WITH          1
-#define TOTAL_LEVELS                 39
+#define TOTAL_LEVELS                 35
 #define TOTAL_COINS                  TOTAL_LEVELS * 6
 
 #define MAX_PER_TYPE                 6                    // total instances per enemy type
@@ -121,6 +121,9 @@ bool collide(HighRect rect1, HighRect rect2)
             rect2.y                 >=  rect1.y + rect1.height ||
             rect2.y + rect2.height  <=  rect1.y);
 }
+uint16_t introFrame = 0;                 // frame counter of the intro (menu.h)
+byte jukeTune = 0;                       // jukebox in the sound menu: 0 = title tune, 1..5 = the game tunes
+#include "arduboy_intro.h"                // the ARDUBOY letters (60 fps timing, INTRO_FRAMES = 130)
 #include "music.h"
 
 #endif

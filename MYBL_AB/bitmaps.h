@@ -75,6 +75,12 @@ PROGMEM const unsigned char soundMenu[] = {
   0xF2, 0xF6, 0xE4, 0xCD, 0x19, 0x71, 0x01, 0x1F, 0x30, 0x27, 0x0F, 0x8F, 0x8F, 0xCF, 0x6F, 0x0F, 0xE8, 0xEB, 0xEA, 0xEA, 0xEB, 0xE8, 0xEB, 0xE8, 0xEC, 0xE9, 0xEB, 0xE8, 0xEF, 0xEF, 0xEF, 0xEF, 0xEF, 0xE7, 0xF0
 };
 
+// two tiny arrows (1 then 3 px, and 3 then 1 px) for the jukebox in the sound menu, drawn black around the word ON (18 px wide)
+PROGMEM const unsigned char jukeArrows[] = {
+  18, 8,
+  0x04, 0x0E, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x0E, 0x04
+};
+
 PROGMEM const unsigned char continueMenu[] = {
   // Bitmap Image. No transparency
   // Width: 27 Height: 24
@@ -1524,8 +1530,8 @@ const uint8_t * levels[] = {
   /*level9,*/ level10, /*level11,*/ level12, level13, level14, level15,
   level16, level17, level18, level19, level20, level21, level22,
   level23, level24, level25, level26, level27, level28, level29,
-  level30, /*level31,*/ jace, level32, level33, level35, level34, level36, level39, level37, levelNarrowWalls, level38,
-  level40, 
+  level30, /*level31,*/ jace, level32, level33, level35, level34, level36, level39,
+  /* removed to make room for the music: level37, levelNarrowWalls, level38, level40 */
 };
 
 #endif
