@@ -30,7 +30,7 @@
 //define menu states (on main menu)
 #define STATE_MENU_INTRO             0
 #define STATE_MENU_MAIN              1
-#define STATE_MENU_HELP              2
+#define STATE_MENU_JBOX              2   // jukebox (was HELP)
 #define STATE_MENU_PLAY              3
 #define STATE_MENU_INFO              4
 #define STATE_MENU_SOUNDFX           5
@@ -77,7 +77,7 @@ Sprites sprites;
 ATMsynth ATM;
 
 byte gameState = STATE_MENU_INTRO;   // start the game with the TEAM a.r.g. logo
-byte menuSelection = STATE_MENU_PLAY; // PLAY menu item is pre-selected
+byte menuSelection = 1;              // main menu item 0..3 (CONF PLAY INFO JBOX), PLAY is pre-selected
 byte globalCounter = 0;
 byte level;
 unsigned long scorePlayer;
@@ -122,7 +122,9 @@ bool collide(HighRect rect1, HighRect rect2)
             rect2.y + rect2.height  <=  rect1.y);
 }
 uint16_t introFrame = 0;                 // frame counter of the intro (menu.h)
-byte jukeTune = 0;                       // jukebox in the sound menu: 0 = title tune, 1..5 = the game tunes
+byte jukeTune = 0;                       // jukebox SD: 0 = title tune, 1..5 = the game tunes
+byte jukeFx = 0;                         // jukebox FX: sound effect number
+byte jukeRow = 0;                        // jukebox row: 0 = SD, 1 = FX
 #include "arduboy_intro.h"                // the ARDUBOY letters (60 fps timing, INTRO_FRAMES = 130)
 #include "music.h"
 

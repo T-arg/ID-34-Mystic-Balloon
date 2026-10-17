@@ -61,32 +61,56 @@ void stateMenuIntro()
   introFrame++;
 }
 
+const byte menuStates[] PROGMEM = { STATE_MENU_SOUNDFX, STATE_MENU_PLAY, STATE_MENU_INFO, STATE_MENU_JBOX };   // CONF PLAY INFO JBOX
+
 void stateMenuMain()
 {
-
   drawTitleScreen();
   sprites.drawOverwrite(51, 9, mainMenu, 0);
-  if (arduboy.justPressed(DOWN_BUTTON) && (menuSelection < 5))
+  if (arduboy.justPressed(DOWN_BUTTON) && (menuSelection < 3))
   {
     menuSelection++;
     sfx(sfxMove);
   }
-  if (arduboy.justPressed(UP_BUTTON) && (menuSelection > 3))
+  if (arduboy.justPressed(UP_BUTTON) && (menuSelection > 0))
   {
     menuSelection--;
     sfx(sfxMove);
   }
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
   {
-    gameState = menuSelection;
+    gameState = pgm_read_byte(&menuStates[menuSelection]);
     sfx(sfxSelect);
   }
-  sprites.drawPlusMask(46, 9 + 9 * (menuSelection - 3), selector_plus_mask, 0);
+  sprites.drawPlusMask(46, 9 + 9 * menuSelection, selector_plus_mask, 0);
 }
 
-void stateMenuHelp()
+// jukebox: UP / DOWN picks SD (songs) or FX (sound effects), LEFT / RIGHT picks the number, A plays the effect again, B leaves
+void jukeFxPlay() { if (jukeRow) sfx((const uint8_t *)pgm_read_word(&jukeFxList[jukeFx])); }
+
+void stateMenuJbox()
 {
-  if (arduboy.justPressed(A_BUTTON | B_BUTTON))
+  drawTitleScreen();
+  sprites.drawOverwrite(53, 18, jboxMenu, 0);
+  if (arduboy.justPressed(DOWN_BUTTON)) jukeRow = 1;
+  if (arduboy.justPressed(UP_BUTTON)) jukeRow = 0;
+  byte *v = jukeRow ? &jukeFx : &jukeTune;
+  byte last = jukeRow ? JUKE_FX - 1 : TUNE_COUNT;
+  if (arduboy.justPressed(RIGHT_BUTTON) && *v < last) { (*v)++; jukeFxPlay(); }
+  if (arduboy.justPressed(LEFT_BUTTON) && *v > 0) { (*v)--; jukeFxPlay(); }
+  if (arduboy.justPressed(A_BUTTON)) jukeFxPlay();
+  for (byte r = 0; r < 2; r++)
+  {
+    byte y = 21 + 9 * r;                                                  // in the black space next to SD and FX
+    sprites.drawSelfMasked(70, y, numbersSmall, (r ? jukeFx : jukeTune) + 1);
+    if (arduboy.frameCount & 16)                                          // blinking arrows
+    {
+      sprites.drawSelfMasked(67, y, jukeArrowL, 0);
+      sprites.drawSelfMasked(74, y, jukeArrowR, 0);
+    }
+  }
+  sprites.drawPlusMask(48, 18 + 9 * jukeRow, selector_plus_mask, 0);
+  if (arduboy.justPressed(B_BUTTON))
   {
     gameState = STATE_MENU_MAIN;
     sfx(sfxSelect);
@@ -127,9 +151,6 @@ void stateMenuSoundfx()
     sfx(sfxMove);
   }
   if (arduboy.justPressed(UP_BUTTON)) arduboy.audio.off();
-  jukeTune += arduboy.justPressed(RIGHT_BUTTON) && jukeTune < TUNE_COUNT;           // jukebox: LEFT / RIGHT picks the tune
-  jukeTune -= arduboy.justPressed(LEFT_BUTTON) && jukeTune > 0;
-  if (arduboy.frameCount & 16) sprites.drawErase(64, 30, jukeArrows, 0);              // tiny arrows left and right of ON blink: the jukebox (LEFT / RIGHT)
   sprites.drawPlusMask(54, 18 + 9 * arduboy.audio.enabled(), selector_plus_mask, 0);
   if (arduboy.justPressed(A_BUTTON | B_BUTTON))
   {

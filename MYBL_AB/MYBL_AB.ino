@@ -29,7 +29,7 @@ typedef void (*FunctionPointer) ();
 const FunctionPointer PROGMEM  mainGameLoop[] = {
   stateMenuIntro,
   stateMenuMain,
-  stateMenuHelp,
+  stateMenuJbox,
   stateMenuPlaySelect,
   stateMenuInfo,
   stateMenuSoundfx,

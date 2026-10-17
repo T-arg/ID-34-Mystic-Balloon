@@ -2,7 +2,7 @@
 #define MUSIC_H
 
 // Music and sound effects for Mystic Balloon (ATMlib).
-//   mysticTitle   title screen and menus: 8 bars, 2 channels, loops forever
+//   mysticTitle   title screen and menus: Arabian night, 8 bars, 3 channels, loops forever
 // Sound effects are one-track ATM_SFX_TRACKs for ATM.playSfx() (ATMlib has ONE effect slot, a new effect replaces the running one).
 
 #include <ATMcmds.h>
@@ -12,49 +12,180 @@
 #endif
 
 // ---------------------------------------------------------------------------
-// Mystic Balloon - title. E phrygian, a sparse bell melody over a slow minor / major arpeggio pad. 8 bars of 64 ticks.
-// ch0 lead (pulse), ch1 pad (square, arpeggio). 98 bytes
+// Mystic Balloon - title
+// Arabian night: D hijaz (D Eb F# G A Bb C), tempo 28, 8 bars = 512 ticks.
+// CH0 lead, CH1 darbuka rhythm, CH2 arpeggio pad (CH3 silent).
+// 184 bytes
 // ---------------------------------------------------------------------------
-Song mysticTitle[] = {
-  0x04,                         // Number of tracks
-  0x00, 0x00,                   // Address of track 0   //0   lead
-  0x38, 0x00,                   // Address of track 1   //56  pad (4 bars)
-  0x4D, 0x00,                   // Address of track 2   //77  pad loop
-  0x54, 0x00,                   // Address of track 3   //84  silent
+Song mysticTitle[] = {          // total song in bytes = 184
+  0x06,                         // Number of tracks
+  0x00, 0x00,                   // Address of track 0   //0  lead
+  0x60, 0x00,                   // Address of track 1   //96  A1
+  0x6F, 0x00,                   // Address of track 2   //111  drum
+  0x76, 0x00,                   // Address of track 3   //118  hit
+  0x89, 0x00,                   // Address of track 4   //137  pad
+  0xA6, 0x00,                   // Address of track 5   //166  silent
 
   0x00,                         // Channel 0 entry track (lead)
-  0x02,                         // Channel 1 entry track (pad loop)
-  0x03,                         // Channel 2 entry track (silent)
-  0x03,                         // Channel 3 entry track (silent)
+  0x02,                         // Channel 1 entry track (drum)
+  0x04,                         // Channel 2 entry track (pad)
+  0x05,                         // Channel 3 entry track (silent)
 
-  //"Track 0" lead [56 bytes]
-  ATM_SET_TEMPO(30),
+  //"Track 0" lead  [96 bytes]
+  ATM_SET_TEMPO(28),
   ATM_VOL(40),
   ATM_SL_VOL((uint8_t)-1),
-  ATM_NOTE_B4,  ATM_DELAY(24), ATM_NOTE_E5,  ATM_DELAY(8), ATM_NOTE_D5_, ATM_DELAY(32),   // Em
-  ATM_NOTE_C5,  ATM_DELAY(24), ATM_NOTE_A4,  ATM_DELAY(8), ATM_NOTE_C5,  ATM_DELAY(32),   // F
-  ATM_NOTE_B4,  ATM_DELAY(24), ATM_NOTE_G4,  ATM_DELAY(8), ATM_NOTE_B4,  ATM_DELAY(32),   // Em
-  ATM_NOTE_D5_, ATM_DELAY(24), ATM_NOTE_F5_, ATM_DELAY(8), ATM_NOTE_D5_, ATM_DELAY(32),   // B
-  ATM_NOTE_E5,  ATM_DELAY(24), ATM_NOTE_G5,  ATM_DELAY(8), ATM_NOTE_F5_, ATM_DELAY(32),   // Em
-  ATM_NOTE_A4,  ATM_DELAY(24), ATM_NOTE_C5,  ATM_DELAY(8), ATM_NOTE_F5,  ATM_DELAY(32),   // F
-  ATM_NOTE_E5,  ATM_DELAY(24), ATM_NOTE_D5,  ATM_DELAY(8), ATM_NOTE_B4,  ATM_DELAY(32),   // Em
-  ATM_NOTE_F5_, ATM_DELAY(24), ATM_NOTE_D5_, ATM_DELAY(8), ATM_NOTE_B4,  ATM_DELAY(32),   // B
-  ATM_GOTO(0),
+  ATM_GOTO(1),   // -> A1
+  ATM_NOTE_A4,
+  ATM_DELAY(8),
+  ATM_NOTE_A4_,
+  ATM_DELAY(8),
+  ATM_NOTE_A4,
+  ATM_DELAY(4),
+  ATM_NOTE_G4,
+  ATM_DELAY(4),
+  ATM_NOTE_F4_,
+  ATM_DELAY(16),
+  ATM_NOTE_G4,
+  ATM_DELAY(8),
+  ATM_NOTE_A4,
+  ATM_DELAY(16),
+  ATM_NOTE_A4_,
+  ATM_DELAY(16),
+  ATM_NOTE_A4,
+  ATM_DELAY(4),
+  ATM_NOTE_A4_,
+  ATM_DELAY(4),
+  ATM_NOTE_C5,
+  ATM_DELAY(8),
+  ATM_NOTE_D5,
+  ATM_DELAY(8),
+  ATM_NOTE_D5_,
+  ATM_DELAY(8),
+  ATM_NOTE_F5_,
+  ATM_DELAY(16),
+  ATM_NOTE_D5_,
+  ATM_DELAY(8),
+  ATM_NOTE_D5,
+  ATM_DELAY(8),
+  ATM_NOTE_C5,
+  ATM_DELAY(8),
+  ATM_NOTE_A4_,
+  ATM_DELAY(8),
+  ATM_NOTE_A4,
+  ATM_DELAY(8),
+  ATM_NOTE_G4,
+  ATM_DELAY(8),
+  ATM_NOTE_F4_,
+  ATM_DELAY(16),
+  ATM_GOTO(1),   // -> A1
+  ATM_NOTE_A4,
+  ATM_DELAY(8),
+  ATM_NOTE_A4_,
+  ATM_DELAY(8),
+  ATM_NOTE_A4,
+  ATM_DELAY(4),
+  ATM_NOTE_G4,
+  ATM_DELAY(4),
+  ATM_NOTE_F4_,
+  ATM_DELAY(16),
+  ATM_NOTE_A4,
+  ATM_DELAY(8),
+  ATM_NOTE_D5,
+  ATM_DELAY(16),
+  ATM_NOTE_D5,
+  ATM_DELAY(8),
+  ATM_NOTE_D5_,
+  ATM_DELAY(8),
+  ATM_NOTE_F5_,
+  ATM_DELAY(16),
+  ATM_NOTE_G5,
+  ATM_DELAY(8),
+  ATM_NOTE_F5_,
+  ATM_DELAY(4),
+  ATM_NOTE_D5_,
+  ATM_DELAY(4),
+  ATM_NOTE_D5,
+  ATM_DELAY(16),
+  ATM_NOTE_C5,
+  ATM_DELAY(8),
+  ATM_NOTE_A4_,
+  ATM_DELAY(8),
+  ATM_NOTE_A4,
+  ATM_DELAY(8),
+  ATM_NOTE_G4,
+  ATM_DELAY(8),
+  ATM_NOTE_F4_,
+  ATM_DELAY(8),
+  ATM_NOTE_D4_,
+  ATM_DELAY(8),
+  ATM_NOTE_D4,
+  ATM_DELAY(16),
+  ATM_GOTO(0),   // -> lead
 
-  //"Track 1" pad, 4 bars [21 bytes]
-  ATM_ARP(0x34, 0x23), ATM_NOTE_E3, ATM_DELAY(64),
-  ATM_ARP(0x43, 0x23), ATM_NOTE_F3, ATM_DELAY(64),
-  ATM_ARP(0x34, 0x23), ATM_NOTE_E3, ATM_DELAY(64),
-  ATM_ARP(0x43, 0x23), ATM_NOTE_B2, ATM_DELAY(64),
+  //"Track 1" A1  [15 bytes]
+  ATM_NOTE_D5,
+  ATM_DELAY(16),
+  ATM_NOTE_D5_,
+  ATM_DELAY(4),
+  ATM_NOTE_D5,
+  ATM_DELAY(4),
+  ATM_NOTE_C5,
+  ATM_DELAY(8),
+  ATM_NOTE_A4_,
+  ATM_DELAY(8),
+  ATM_NOTE_A4,
+  ATM_DELAY(8),
+  ATM_NOTE_G4,
+  ATM_DELAY(16),
   ATM_RETURN,
 
-  //"Track 2" pad loop [7 bytes]
-  ATM_VOL(20),
-  ATM_REPEAT(2, 1),
-  ATM_GOTO(2),
+  //"Track 2" drum  [7 bytes]
+  ATM_SL_VOL((uint8_t)-3),
+  ATM_REPEAT(7, 3),   // 8x hit
+  ATM_GOTO(2),   // -> drum
 
-  //"Track 3" silent [1 byte]
-  ATM_STOP_CHAN
+  //"Track 3" hit  [19 bytes]
+  ATM_VOL(36),
+  ATM_NOTE_D2,
+  ATM_DELAY(8),
+  ATM_VOL(22),
+  ATM_NOTE_D5,
+  ATM_DELAY(16),
+  ATM_NOTE_D5,
+  ATM_DELAY(8),
+  ATM_VOL(36),
+  ATM_NOTE_D2,
+  ATM_DELAY(16),
+  ATM_VOL(22),
+  ATM_NOTE_D5,
+  ATM_DELAY(16),
+  ATM_RETURN,
+
+  //"Track 4" pad  [29 bytes]
+  ATM_VOL(16),
+  ATM_ARP(0x43, 0x23),
+  ATM_NOTE_D3,
+  ATM_DELAY(64),
+  ATM_DELAY(64),
+  ATM_ARP(0x43, 0x23),
+  ATM_NOTE_D3_,
+  ATM_DELAY(64),
+  ATM_DELAY(64),
+  ATM_NOTE_D3,
+  ATM_DELAY(64),
+  ATM_DELAY(64),
+  ATM_ARP(0x34, 0x23),
+  ATM_NOTE_G3,
+  ATM_DELAY(64),
+  ATM_ARP(0x43, 0x23),
+  ATM_NOTE_A3,
+  ATM_DELAY(64),
+  ATM_GOTO(4),   // -> pad
+
+  //"Track 5" silent  [1 bytes]
+  ATM_STOP_CHAN,
+
 };
 
 // music volume scaling (see the ATMlib README): 100 = as written in the tunes; lower it to make the tunes quieter than the effects
@@ -67,7 +198,7 @@ Song mysticTitle[] = {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 // Sphinx Sands
-// Sphinx Sands: D hijaz (D Eb F# G A Bb C), tempo 30, 8 bars = 512 ticks. CH1 square lead, CH2 saw bass (CH0 / CH3 silent).
+// Sphinx Sands: D hijaz (D Eb F# G A Bb C), tempo 30, 8 bars = 512 ticks. CH1 bass, CH2 lead (CH0 / CH3 silent).
 // 112 bytes
 // ---------------------------------------------------------------------------
 Song tuneSphinx[] = {          // total song in bytes = 112
@@ -80,8 +211,8 @@ Song tuneSphinx[] = {          // total song in bytes = 112
   0x5E, 0x00,                   // Address of track 5   //94  silent
 
   0x05,                         // Channel 0 entry track (silent)
-  0x00,                         // Channel 1 entry track (lead)
-  0x01,                         // Channel 2 entry track (bass)
+  0x01,                         // Channel 1 entry track (bass)
+  0x00,                         // Channel 2 entry track (lead)
   0x05,                         // Channel 3 entry track (silent)
 
   //"Track 0" lead  [16 bytes]
@@ -183,7 +314,7 @@ Song tuneSphinx[] = {          // total song in bytes = 112
 
 // ---------------------------------------------------------------------------
 // Nile Caravan
-// Nile Caravan: A hijaz (A Bb C# D E F G), tempo 28, 8 bars = 512 ticks. CH1 square lead, CH2 saw bass (CH0 / CH3 silent).
+// Nile Caravan: A hijaz (A Bb C# D E F G), tempo 28, 8 bars = 512 ticks. CH1 bass, CH2 lead (CH0 / CH3 silent).
 // 108 bytes
 // ---------------------------------------------------------------------------
 Song tuneCaravan[] = {          // total song in bytes = 108
@@ -196,8 +327,8 @@ Song tuneCaravan[] = {          // total song in bytes = 108
   0x5A, 0x00,                   // Address of track 5   //90  silent
 
   0x05,                         // Channel 0 entry track (silent)
-  0x00,                         // Channel 1 entry track (lead)
-  0x01,                         // Channel 2 entry track (bass)
+  0x01,                         // Channel 1 entry track (bass)
+  0x00,                         // Channel 2 entry track (lead)
   0x05,                         // Channel 3 entry track (silent)
 
   //"Track 0" lead  [16 bytes]
@@ -295,7 +426,7 @@ Song tuneCaravan[] = {          // total song in bytes = 108
 
 // ---------------------------------------------------------------------------
 // Pharaoh's Hall
-// Pharaoh's Hall: E hijaz (E F G# A B C D), tempo 24, 8 bars = 512 ticks. CH1 square lead, CH2 saw bass (CH0 / CH3 silent).
+// Pharaoh's Hall: E hijaz (E F G# A B C D), tempo 24, 8 bars = 512 ticks. CH1 bass, CH2 lead (CH0 / CH3 silent).
 // 100 bytes
 // ---------------------------------------------------------------------------
 Song tuneHall[] = {          // total song in bytes = 100
@@ -308,8 +439,8 @@ Song tuneHall[] = {          // total song in bytes = 100
   0x52, 0x00,                   // Address of track 5   //82  silent
 
   0x05,                         // Channel 0 entry track (silent)
-  0x00,                         // Channel 1 entry track (lead)
-  0x01,                         // Channel 2 entry track (bass)
+  0x01,                         // Channel 1 entry track (bass)
+  0x00,                         // Channel 2 entry track (lead)
   0x05,                         // Channel 3 entry track (silent)
 
   //"Track 0" lead  [16 bytes]
@@ -399,7 +530,7 @@ Song tuneHall[] = {          // total song in bytes = 100
 
 // ---------------------------------------------------------------------------
 // Oasis Dance
-// Oasis Dance: G hijaz (G Ab B C D Eb F), tempo 36, 8 bars = 512 ticks. CH1 square lead, CH2 saw bass (CH0 / CH3 silent).
+// Oasis Dance: G hijaz (G Ab B C D Eb F), tempo 36, 8 bars = 512 ticks. CH1 bass, CH2 lead (CH0 / CH3 silent).
 // 118 bytes
 // ---------------------------------------------------------------------------
 Song tuneOasis[] = {          // total song in bytes = 118
@@ -412,8 +543,8 @@ Song tuneOasis[] = {          // total song in bytes = 118
   0x64, 0x00,                   // Address of track 5   //100  silent
 
   0x05,                         // Channel 0 entry track (silent)
-  0x00,                         // Channel 1 entry track (lead)
-  0x01,                         // Channel 2 entry track (bass)
+  0x01,                         // Channel 1 entry track (bass)
+  0x00,                         // Channel 2 entry track (lead)
   0x05,                         // Channel 3 entry track (silent)
 
   //"Track 0" lead  [16 bytes]
@@ -521,7 +652,7 @@ Song tuneOasis[] = {          // total song in bytes = 118
 
 // ---------------------------------------------------------------------------
 // Pyramid Chase
-// Pyramid Chase: C hijaz (C Db E F G Ab Bb), tempo 40, 8 bars = 512 ticks. CH1 square lead, CH2 saw bass (CH0 / CH3 silent).
+// Pyramid Chase: C hijaz (C Db E F G Ab Bb), tempo 40, 8 bars = 512 ticks. CH1 bass, CH2 lead (CH0 / CH3 silent).
 // 118 bytes
 // ---------------------------------------------------------------------------
 Song tuneChase[] = {          // total song in bytes = 118
@@ -534,8 +665,8 @@ Song tuneChase[] = {          // total song in bytes = 118
   0x64, 0x00,                   // Address of track 5   //100  silent
 
   0x05,                         // Channel 0 entry track (silent)
-  0x00,                         // Channel 1 entry track (lead)
-  0x01,                         // Channel 2 entry track (bass)
+  0x01,                         // Channel 1 entry track (bass)
+  0x00,                         // Channel 2 entry track (lead)
   0x05,                         // Channel 3 entry track (silent)
 
   //"Track 0" lead  [16 bytes]
@@ -670,6 +801,10 @@ void sfx(const uint8_t *track)
   if (arduboy.audio.enabled()) ATM.playSfx(track, 0);
 }
 
+// jukebox list of the sound effects (menu.h)
+#define JUKE_FX 9
+const uint8_t *const jukeFxList[] PROGMEM = { sfxMove, sfxSelect, sfxJump, sfxLand, sfxWind, sfxHurt, sfxKey, sfxCoin, sfxPop };
+
 // one step of the score count (game.h)
 byte toneindex = 0;
 void sfxCount()
@@ -689,7 +824,7 @@ Song silentSong[] = {
 };
 
 // called once per frame. Song ids: 1 = title tune, 2..6 = the game tunes, 0 = the empty song.
-// The title tune starts with the T-arg logo and plays in the menus, the sound menu is a jukebox (jukeTune),
+// The title tune starts with the T-arg logo and plays in the menus, the jukebox plays jukeTune,
 // a random Arabian tune plays while playing (a new one every level), silence in between.
 byte musicOn = 0;
 void musicUpdate()
@@ -698,7 +833,7 @@ void musicUpdate()
   if (arduboy.audio.enabled())
   {
     if (gameState == STATE_MENU_INTRO) { if (introFrame >= INTRO_FRAMES) want = 1; }
-    else if (gameState == STATE_MENU_SOUNDFX) want = 1 + jukeTune;
+    else if (gameState == STATE_MENU_JBOX) want = 1 + jukeTune;
     else if (gameState < STATE_GAME_NEXT_LEVEL) want = 1;
     else if (gameState == STATE_GAME_PLAYING || gameState == STATE_GAME_PAUSE) want = (musicOn > 1) ? musicOn : 2 + (byte)(micros() >> 4) % TUNE_COUNT;
   }

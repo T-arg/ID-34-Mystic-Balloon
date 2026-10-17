@@ -21,6 +21,9 @@
 // LSB solid ____ ___x
 
 
+// Decoded tile grid of the current level (filled by levelLoad)
+byte levelGrid[LEVEL_ARRAY_SIZE >> 3];
+
 // Cell based grid checking
 bool gridGetSolid(int8_t x, int8_t y) {
   if (x < 0 || x >= LEVEL_WIDTH_CELLS)
@@ -29,9 +32,7 @@ bool gridGetSolid(int8_t x, int8_t y) {
   if (y < 0 || y >= LEVEL_HEIGHT_CELLS)
     return 0;
 
-  const uint8_t *lvl = levels[level];
-  byte b = pgm_read_byte(lvl + (x >> 3) + (y * (LEVEL_WIDTH_CELLS >> 3)));
-  return ((b >> (x % 8)) & 0x01);
+  return ((levelGrid[(x >> 3) + (y * (LEVEL_WIDTH_CELLS >> 3))] >> (x & 7)) & 0x01);
 }
 
 byte gridGetTile(int8_t x, int8_t y) {
@@ -74,77 +75,81 @@ byte gridGetTile(int8_t x, int8_t y) {
 }
 
 
-void levelLoad(const uint8_t *lvl) {
-  byte i = 0;
-  lvl += LEVEL_ARRAY_SIZE >> 3;
-
-  byte b = pgm_read_byte(lvl);
-  while (b != 0xFF)
+// objects are bit packed (MSB first): start, finish and key (y 5 bits, x 5 bits), then for
+// walkers, fans, spikes and coins: a count (5 bits) and per object y, x (5 bits each),
+// fans add 8 bits (type) and spikes 3 bits (direction)
+const uint8_t *levelBits;
+uint16_t levelBitPos;
+byte levelRead(byte n)
+{
+  byte v = 0;
+  while (n--)
   {
-    byte id, x, y, h;
-    id = pgm_read_byte(lvl + i) & 0xE0;
-    y = (pgm_read_byte(lvl + i++) & 0x1F);
-    x = pgm_read_byte(lvl + i++) & 0x1F;
-    switch ( id )
+    v = (v << 1) | ((pgm_read_byte(levelBits + (levelBitPos >> 3)) >> (7 - (levelBitPos & 7))) & 1);
+    levelBitPos++;
+  }
+  return v;
+}
+
+void levelLoad(const uint8_t *lvl) {
+  // tiles: 3 byte mask (bit y set = row y equals row y-1), then the unique rows
+  const uint8_t *r = lvl + 3;
+  byte *g = levelGrid;
+  for (byte y = 0; y < LEVEL_HEIGHT_CELLS; y++, g += 3)
+  {
+    if ((pgm_read_byte(lvl + (y >> 3)) >> (y & 7)) & 1) memcpy(g, g - 3, 3);
+    else { memcpy_P(g, r, 3); r += 3; }
+  }
+  levelBits = r;
+  levelBitPos = 0;
+
+  for (byte k = 0; k < 7; k++)
+  {
+    byte id = (k < 2) ? k : (k == 2) ? 6 : k - 1;       // start, finish, key, walkers, fans, spikes, coins
+    byte n = (k < 3) ? 1 : levelRead(5);
+    while (n--)
     {
-      case LSTART:
-        {
+      byte y = levelRead(5);
+      byte x = levelRead(5);
+      switch ( id )
+      {
+        case 0:
           // Start
           startPos.x = (int)x << (FIXED_POINT + 4);
           startPos.y = (int)y << (FIXED_POINT + 4);
-          //kid.actualpos.x = (int)x << (FIXED_POINT + 4);
-          //kid.actualpos.y = (int)y << (FIXED_POINT + 4);
           kid.actualpos = startPos;
-        }
-        break;
-      case LFINISH:
-        {
+          break;
+        case 1:
           // Finish
           levelExit.x = x << 4;
           levelExit.y = y << 4;
-        }
-        break;
-      case LWALKER:
-        {
-          // Walker
+          break;
+        case 2:
           walkersCreate(vec2(x, y));
-        }
-        break;
-      case LFAN:
-        {
-          // Fan
-          byte t = pgm_read_byte(lvl + i++);
-          if (t < 64)
-            fansCreate(vec2(x, y), t);
-          else if (t < 192)
-            fansCreate(vec2(x, y), t & 0x3F, FAN_RIGHT);
-          else
-            fansCreate(vec2(x, y), t & 0x3F, FAN_LEFT);
-        }
-        break;
-      case LSPIKES:
-        {
-          // Spikes
-          spikesCreate(vec2(x, y), pgm_read_byte(lvl + (i - 1)) >> 5);
-        }
-        break;
-      case LCOIN:
-        {
-          // Coins
+          break;
+        case 3:
+          {
+            // Fan
+            byte t = levelRead(8);
+            if (t < 64)
+              fansCreate(vec2(x, y), t);
+            else if (t < 192)
+              fansCreate(vec2(x, y), t & 0x3F, FAN_RIGHT);
+            else
+              fansCreate(vec2(x, y), t & 0x3F, FAN_LEFT);
+          }
+          break;
+        case 4:
+          spikesCreate(vec2(x, y), levelRead(3));
+          break;
+        case 5:
           coinsCreate(vec2(x, y));
-        }
-        break;
-      default: //case LKEY:
-        {
-          // Key
+          break;
+        default:
           keyCreate(vec2(x, y));
-        }
-        break;
-      //default:
-        //break;
+          break;
+      }
     }
-
-    b = pgm_read_byte(lvl + i);
   }
 }
 
